@@ -337,12 +337,21 @@ const CMSForm = () => {
                 </div>
         `;
     };
+    const createSlug = (title) => {
+        return title
+            .toLowerCase()               // Convert to lowercase
+            .replace(/[^\w\s-]/g, '')     // Remove special characters (anything not a letter, number, or space)
+            .replace(/\s+/g, '-')         // Replace spaces with hyphens
+            .replace(/-+/g, '-')          // Replace multiple hyphens with a single hyphen
+            .replace(/^-+/, '')           // Remove leading hyphens
+            .replace(/-+$/, '');          // Remove trailing hyphens
+    };
 
     const postContent = async () => {
         try {
             const colRef = collection(db, "posts");
             let data = JSON.parse(localStorage.getItem("current_post_article"));
-            const slug = postTitle.toLowerCase().replace(/\s+/g, "-").replace(/\?/g, "");
+            const slug = createSlug(postTitle);
             const newDoc = await addDoc(colRef, { ...data, createdAt: Timestamp.now(), slug: slug });
             console.log(newDoc, "Blog posted");
             toast.success("Blog posted successfuly!");
