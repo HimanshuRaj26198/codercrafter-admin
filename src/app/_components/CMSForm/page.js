@@ -47,7 +47,7 @@ const MenuBar = () => {
 
                 try {
                     console.log("API REQUESTING: ", process.env.NEXT_PUBLIC_API_BASE_URL);
-                    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/image/upload`, formData);
+                    const response = await axios.post(`/api/image/upload`, formData);
                     const imageUrl = response.data.imgUrl;
 
                     if (editor) {
@@ -390,7 +390,7 @@ const CMSForm = () => {
             const file = event.target.files[0]
             const formData = new FormData();
             formData.append("image", file);
-            let response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/image/upload`, formData);
+            let response = await axios.post(`/api/image/upload`, formData);
             dispatch({ type: "create", payload: { headerImg: response.data.imgUrl } });
             setImg(response.data.imgUrl);
             setFileName(file.name);
