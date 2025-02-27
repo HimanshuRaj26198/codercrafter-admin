@@ -20,6 +20,7 @@ import CustomHeading from '../CustomHeading1/CustomHeading1';
 import MetaData from '../MetaData/page';
 import { addDoc, collection, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
+import { toast } from 'react-toastify';
 
 
 const lowlight = createLowlight(common);
@@ -282,11 +283,21 @@ const CMSForm = () => {
     useEffect(() => {
         if (typeof window !== "undefined") {
             let data = JSON.parse(localStorage.getItem("current_post_article"));
-            setContentValue(data.rawContent);
-            setPostTitle(data.title);
-            setPostDesc(data.description);
-            setHeaderImage(data.headerImg);
-            setCategory(data.category);
+            if (data.rawContent) {
+                setContentValue(data.rawContent);
+            }
+            if (data.title) {
+                setPostTitle(data.title);
+            }
+            if (data.description) {
+                setPostDesc(data.description);
+            }
+            if (data.headerImg) {
+                setHeaderImage(data.headerImg);
+            }
+            if (data.category) {
+                setCategory(data.category);
+            }
         }
     }, []);
 
@@ -334,9 +345,27 @@ const CMSForm = () => {
             const slug = postTitle.toLowerCase().replace(/\s+/g, "-").replace(/\?/g, "");
             const newDoc = await addDoc(colRef, { ...data, createdAt: Timestamp.now(), slug: slug });
             console.log(newDoc, "Blog posted");
+            toast.success("Blog posted successfuly!");
+            localStorage.removeItem("current_post_article");
+            setContentValue("");
+            setPostTitle("");
+            setPostDesc("");
+            setHeaderImage("");
+            setCategory("");
+
         } catch (err) {
             console.log(err);
+            toast.error("Error in posting blog!")
         }
+    };
+
+    const clearContent = () => {
+        localStorage.removeItem("current_post_article");
+        setContentValue("");
+        setPostTitle("");
+        setPostDesc("");
+        setHeaderImage("");
+        setCategory("");
     };
 
     const draftContent = async () => {
@@ -393,7 +422,8 @@ const CMSForm = () => {
                 <div className='action_container' >
                     <button style={{ border: "2.5px solid blue" }} className='post_btn' onClick={postContent}>Publish</button>
                     <a style={{ border: "2.5px solid yellow", textDecoration: "none", color: "black" }} className='post_btn' href='/preview' >Preview</a>
-                    <button style={{ border: "2.5px solid orange" }} className='post_btn' onClick={() => postContent(editor?.getHTML())}>Save Draft</button>
+                    <button style={{ border: "2.5px solid orange" }} className='post_btn' onClick={draftContent}>Save Draft</button>
+                    <button style={{ border: "2.5px solid red" }} className='post_btn' onClick={clearContent} >Clear</button>
                 </div>
                 <div className='input_container' >
                     <label>Post Title</label>

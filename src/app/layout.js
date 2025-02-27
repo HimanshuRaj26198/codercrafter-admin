@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ContentContextProvider } from "@/lib/context/ContentContext";
 import Navbar from "./_components/Navbar/page";
+import { ToastContainer } from "react-toastify";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,6 +47,7 @@ export default function RootLayout({ children }) {
               style={{ height: 72, margin: 0 }}
               bis_skin_checked={1}
             />
+            <ToastContainer />
             {children}
             <div className="lg:mt-28 mt-10 mb-7 px-12 border-t pt-7" bis_skin_checked={1}>
               <div
