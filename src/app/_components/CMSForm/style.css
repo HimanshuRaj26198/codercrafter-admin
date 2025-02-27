@@ -1,0 +1,204 @@
+/* Basic editor styles */
+.tiptap {
+    /* List styles */
+    /* Heading styles */
+    /* Code and preformatted text styles */
+}
+
+.tiptap :first-child {
+    margin-top: 0;
+}
+
+.tiptap ul,
+.tiptap ol {
+    padding: 0 1rem;
+    margin: 1.25rem 1rem 1.25rem 0.4rem;
+}
+
+.tiptap ul li p,
+.tiptap ol li p {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+}
+
+.tiptap h1,
+.tiptap h2,
+.tiptap h3,
+.tiptap h4,
+.tiptap h5,
+.tiptap h6 {
+    line-height: 1.1;
+    margin-top: 2.5rem;
+    text-wrap: pretty;
+}
+
+.tiptap h1,
+.tiptap h2 {
+    margin-top: 3.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.tiptap h1 {
+    font-size: 1.4rem;
+}
+
+.tiptap h2 {
+    font-size: 1.2rem;
+}
+
+.tiptap h3 {
+    font-size: 1.1rem;
+}
+
+.tiptap h4,
+.tiptap h5,
+.tiptap h6 {
+    font-size: 1rem;
+}
+
+.tiptap code {
+    background-color: var(--purple-light);
+    border-radius: 0.4rem;
+    color: var(--black);
+    font-size: 0.85rem;
+    padding: 0.25em 0.3em;
+}
+
+.tiptap pre {
+    background: var(--black);
+    border-radius: 0.5rem;
+    color: var(--white);
+    font-family: 'JetBrainsMono', monospace;
+    margin: 1.5rem 0;
+    padding: 0.75rem 1rem;
+}
+
+.tiptap pre code {
+    background: none;
+    color: inherit;
+    font-size: 0.8rem;
+    padding: 0;
+}
+
+.tiptap blockquote {
+    border-left: 3px solid var(--gray-3);
+    margin: 1.5rem 0;
+    padding-left: 1rem;
+}
+
+.tiptap hr {
+    border: none;
+    border-top: 1px solid var(--gray-2);
+    margin: 2rem 0;
+}
+
+/* Add this to your CSS file (e.g., style.css) */
+.code-block {
+    background-color: #2d2d2d;
+    /* Dark background */
+    color: #f8f8f2;
+    /* Light text color */
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+.code-block code {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+}
+
+
+.tiptap {
+    min-height: 500px;
+    border: 1px solid rgba(0, 0, 0, 0.4) !important;
+}
+
+.input_container input {
+    border: 1px solid rgba(0, 0, 0, 0.4) !important;
+}
+
+.post_btn {
+
+    padding: 1px 8px;
+}
+
+.action_container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+
+.tiptap-editor ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.tiptap-editor ol {
+    list-style-type: decimal;
+    padding-left: 20px;
+}
+
+
+/* Trending Style for File Input */
+.file_input {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    background-color: #f4f4f4;
+    border: 2px dashed #999;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #555;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    /* Ensures input stays inside */
+}
+
+/* Show file input with slight visibility */
+input[type="file"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    opacity: 0.01;
+    /* Slight visibility */
+    z-index: 2;
+}
+
+/* File name display */
+.file_label {
+    font-size: 14px;
+    color: #333;
+    position: relative;
+    z-index: 1;
+}
+
+/* Change border on hover */
+.file_input:hover {
+    background-color: #e0e0e0;
+    border-color: #666;
+}
+
+.file_upload_wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.image_preview {
+    width: 50px;
+    /* Small thumbnail size */
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+    /* Rounded corners */
+    border: 1px solid #ccc;
+}
