@@ -461,7 +461,7 @@ const CMSForm = () => {
 
                 <div className='input_container' >
                     <label>Category</label>
-                    <select defaultValue="Select Category" value={category} onChange={(e) => { dispatch({ type: "create", payload: { category: e.target.value, category_ref: e.target.value == "React Native" ? "react-native" : e.target.value.toLowerCase() } }); setCategory(e.target.value); }} style={{ border: "1px solid #0006 !important" }} >
+                    <select defaultValue="Select Category" value={category} onChange={(e) => { dispatch({ type: "create", payload: { category: e.target.value, category_ref: e.target.value == "React Native" ? "react-native" : e.target.value == "IT Trends" ? "tech" : e.target.value.toLowerCase() } }); setCategory(e.target.value); }} style={{ border: "1px solid #0006 !important" }} >
                         <option value="Select Category" >Select Category</option>
                         <option value="JavaScript" >JavaScript</option>
                         <option value="ReactJS" >ReactJS</option>
@@ -470,6 +470,7 @@ const CMSForm = () => {
                         <option value="Angular" >Angular</option>
                         <option value="Python" >Python</option>
                         <option value="React Native" >React Native</option>
+                        <option value="IT Trends" >IT Trends</option>
                     </select>
                     <div style={{ width: "100%", textAlign: "right" }} ><a style={{ textAlign: "right", fontSize: 12, color: "blue", cursor: "pointer" }} onClick={() => setToggleMetaData(true)} >Additional Data +</a></div>
                 </div>
