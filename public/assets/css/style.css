@@ -10203,6 +10203,26 @@ input[type="submit"].dark1 {
     background: #62d76b;
 }
 
+
+/* Ensure list bullets are visible */
+.tube-card ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.tube-card ul p {
+    margin: 0;
+}
+
+.tube-card ol p {
+    margin: 0;
+}
+
+.tube-card ol {
+    list-style-type: decimal;
+    padding-left: 20px;
+}
+
 /* -------------------------------------------------------------- */
 /* 05. Add your custom classes
 ----------------------------------------------------------------- */

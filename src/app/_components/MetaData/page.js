@@ -1,20 +1,30 @@
 "use client"
 import Color from "@tiptap/extension-color";
 import "./style.css";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 const MetaData = ({ addMetaData, closeMetaData }) => {
-    const ogTitle = useRef(null);
-    const ogDesc = useRef(null);
 
+    const [ogTitle, setOgTitle] = useState("");
+    const [ogDesc, setOgDesc] = useState("");
     const [ogImg, setOgImg] = useState("");
     const [ogFileName, setOgFilename] = useState("Click to upload a file!")
 
-    const twitterTitle = useRef(null);
-    const twitterDesc = useRef(null);
-
+    const [twitterTitle, setTwitterTitle] = useState("");
+    const [twitterDesc, setTwitterDesc] = useState("");
     const [twitterImg, setTwitterImg] = useState("");
     const [twitterFileName, setTwitterFilename] = useState("Click to upload a file!")
+
+
+    useEffect(() => {
+        let data = JSON.parse(localStorage.getItem("current_post_article"));
+        setOgTitle(data.ogTitle);
+        setOgDesc(data.ogDesc);
+        setTwitterTitle(data.twitterTitle);
+        setTwitterDesc(data.twitterDesc);
+        setOgImg(data?.ogImg || "");
+        setTwitterImg(data?.twitterImg || "")
+    }, []);
 
     const handleImageUpload = async (event, setImg, setFileName) => {
         try {
@@ -31,7 +41,8 @@ const MetaData = ({ addMetaData, closeMetaData }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        let obj = { ogTitle: ogTitle.current.value, ogDesc: ogDesc.current.value, ogImg, twitterTitle: twitterTitle.current.value, twitterDesc: twitterDesc.current.value, twitterImg };
+        let obj = { ogTitle: ogTitle, ogDesc: ogDesc, ogImg, twitterTitle: twitterTitle, twitterDesc: twitterDesc, twitterImg };
+        console.log(obj);
         addMetaData(obj);
         handleClose();
     }
@@ -50,11 +61,11 @@ const MetaData = ({ addMetaData, closeMetaData }) => {
                     <form onSubmit={handleSubmit} className="metadata_form" >
                         <div className="input_container" >
                             <label>Opengraph Title</label>
-                            <input ref={ogTitle} type="text" />
+                            <input value={ogTitle} onChange={(e) => setOgTitle(e.target.value)} type="text" />
                         </div>
                         <div className="input_container" >
                             <label>Opengraph Description</label>
-                            <input ref={ogDesc} type="text" />
+                            <input value={ogDesc} onChange={(e) => setOgDesc(e.target.value)} type="text" />
                         </div>
                         <div className="input_container" >
                             <label>Opengraph Image</label>
@@ -65,11 +76,11 @@ const MetaData = ({ addMetaData, closeMetaData }) => {
                         </div>
                         <div className="input_container" >
                             <label>Twitter Title</label>
-                            <input ref={twitterTitle} type="text" />
+                            <input value={twitterTitle} onChange={(e) => setTwitterTitle(e.target.value)} type="text" />
                         </div>
                         <div className="input_container" >
                             <label>Twitter Description</label>
-                            <input ref={twitterDesc} type="text" />
+                            <input value={twitterDesc} onChange={(e) => setTwitterDesc(e.target.value)} type="text" />
                         </div>
                         <div className="input_container" >
                             <label>Twitter Image</label>

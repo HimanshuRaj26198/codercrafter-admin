@@ -3,6 +3,7 @@
     /* List styles */
     /* Heading styles */
     /* Code and preformatted text styles */
+    padding: 5px;
 }
 
 .tiptap :first-child {
@@ -11,14 +12,14 @@
 
 .tiptap ul,
 .tiptap ol {
-    padding: 0 1rem;
-    margin: 1.25rem 1rem 1.25rem 0.4rem;
+    /* padding: 0 1rem; */
+    /* margin: 1.25rem 1rem 1.25rem 0.4rem; */
 }
 
 .tiptap ul li p,
 .tiptap ol li p {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
+    /* margin-top: 0.25em;
+    margin-bottom: 0.25em; */
 }
 
 .tiptap h1,
@@ -201,4 +202,40 @@ input[type="file"] {
     border-radius: 5px;
     /* Rounded corners */
     border: 1px solid #ccc;
+}
+
+/* Ensure list bullets are visible */
+.cms ul {
+    list-style: disc !important;
+    padding-left: 20px;
+}
+
+.cms ol {
+    list-style: decimal !important;
+    padding-left: 20px;
+}
+
+.cms ul p {
+    margin: 0;
+    margin-bottom: 0;
+}
+
+.cms ol p {
+    margin: 0;
+    margin-bottom: 0;
+}
+
+.cms ul li {
+    margin: 0;
+}
+
+.cms ol li {
+    margin: 0;
+    padding: 0;
+}
+
+.button-group {
+    display: flex;
+    gap: 0.1rem;
+    flex-wrap: wrap;
 }
