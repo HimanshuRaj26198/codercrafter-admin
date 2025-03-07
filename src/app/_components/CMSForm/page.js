@@ -325,7 +325,7 @@ const CMSForm = () => {
     const formatHTMLContent = (html) => {
         return `
                 <div class="h-44 mb-4 md:h-72 overflow-hidden relative rounded-t-lg w-full">
-                    <img src="${headerImage || '/assets/images/blog/img-5.jpg'}" alt=${postTitle} class="w-full h-full absolute inset-0 object-cover">
+                    <img src="${headerImage || '/assets/images/blog/img-5.jpg'}" alt="${postTitle}" class="w-full h-full absolute inset-0 object-cover">
                 </div>
                 <div class="md:p-6 p-4">
                 <h1 class="lg:text-2xl text-xl font-semibold mb-6"> ${postTitle} </h1>
