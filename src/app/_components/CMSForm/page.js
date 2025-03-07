@@ -27,12 +27,9 @@ const lowlight = createLowlight(common);
 
 const MenuBar = () => {
     const { editor } = useCurrentEditor()
-
-
     if (!editor) {
         return null
     }
-
     const imageHandler = async () => {
         const input = document.createElement("input");
         input.setAttribute("type", "file");
@@ -46,7 +43,6 @@ const MenuBar = () => {
                 formData.append("image", file);
 
                 try {
-                    console.log("API REQUESTING: ", process.env.NEXT_PUBLIC_API_BASE_URL);
                     const response = await axios.post(`/api/image/upload`, formData);
                     const imageUrl = response.data.imgUrl;
 
@@ -329,7 +325,7 @@ const CMSForm = () => {
     const formatHTMLContent = (html) => {
         return `
                 <div class="h-44 mb-4 md:h-72 overflow-hidden relative rounded-t-lg w-full">
-                    <img src="${headerImage || '/assets/images/blog/img-5.jpg'}" alt="" class="w-full h-full absolute inset-0 object-cover">
+                    <img src="${headerImage || '/assets/images/blog/img-5.jpg'}" alt=${postTitle} class="w-full h-full absolute inset-0 object-cover">
                 </div>
                 <div class="md:p-6 p-4">
                 <h1 class="lg:text-2xl text-xl font-semibold mb-6"> ${postTitle} </h1>
@@ -450,6 +446,7 @@ const CMSForm = () => {
                             <span className="file_label">{headerImageFileName}</span>
                             <input
                                 type="file"
+                                alt={postTitle}
                                 onChange={(event) => handleImageUpload(event, setHeaderImage, setHeaderImageFileName)}
                             />
                         </label>
