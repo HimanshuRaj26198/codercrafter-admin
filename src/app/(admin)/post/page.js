@@ -1,5 +1,5 @@
 import CMSForm from "@/app/_components/CMSForm/page";
-import CmsLoader from "@/app/_components/Loader/page";
+import CmsLoader from "@/app/_components/loader/page";
 const PostPage = () => {
     return <>
         <CmsLoader />
