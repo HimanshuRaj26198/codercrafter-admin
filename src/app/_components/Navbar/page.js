@@ -86,285 +86,308 @@ const Navbar = () => {
     }
 
     return <>
-        <header
-            className="uk-sticky uk-sticky-fixed backdrop-filter backdrop-blur-2xl is-dark  border-b"
-            uk-sticky={`${pathName == "/" ? "cls-inactive: is-dark is-transparent border-b" : ""}`}
-            style={{ position: "fixed", top: 0 }}
-        >
-            <div className="header_inner" bis_skin_checked={1}>
-                <div className="left-side" bis_skin_checked={1}>
-                    {/* Logo */}
-                    <div id="logo" bis_skin_checked={1}>
-                        <a href="/">
-                            <img style={{ height: 50, width: "auto" }} src="/assets/images/codecrafter_logo.png" alt="" />
-                            <img
-                                style={{ height: 50, width: "auto" }}
-                                src="/assets/images/codecrafter_logo.png"
-                                className="logo_inverse"
-                                alt="Codecrafter Institute - Expert Training in Mean Stack, Mern Stack, NextJS, and DevOps (AWS, Azure) for IT Students and Professionals."
-                            />
-                            <img
-                                src="/assets/images/codecrafter_logo.png"
-                                className="logo_mobile"
-                                alt="Codecrafter Institute: Leading IT Training for Mean Stack, Mern Stack, NextJS, and DevOps (AWS, Azure) for Aspiring Professionals."
-                            />
+        <div className="header" bis_skin_checked={1}>
+            {/* Logo */}
+            <div className="header-left active" bis_skin_checked={1}>
+                <a href="index.html" className="logo">
+                    <img src="/assets/img/logo.png" alt="" />
+                </a>
+                <a href="index.html" className="logo-small">
+                    <img src="assets/img/logo-small.png" alt="" />
+                </a>
+                <a id="toggle_btn" href="javascript:void(0);"></a>
+            </div>
+            {/* /Logo */}
+            <a id="mobile_btn" className="mobile_btn" href="#sidebar">
+                <span className="bar-icon">
+                    <span />
+                    <span />
+                    <span />
+                </span>
+            </a>
+            {/* Header Menu */}
+            <ul className="nav user-menu">
+                {/* Search */}
+                <li className="nav-item">
+                    <div className="top-nav-search" bis_skin_checked={1}>
+                        <a href="javascript:void(0);" className="responsive-search">
+                            <i className="fa fa-search" />
+                        </a>
+                        <form action="#">
+                            <div className="searchinputs" bis_skin_checked={1}>
+                                <input type="text" placeholder="Search Here ..." />
+                                <div className="search-addon" bis_skin_checked={1}>
+                                    <span>
+                                        <img src="assets/img/icons/closes.svg" alt="img" />
+                                    </span>
+                                </div>
+                            </div>
+                            <a className="btn" id="searchdiv">
+                                <img src="assets/img/icons/search.svg" alt="img" />
+                            </a>
+                        </form>
+                    </div>
+                </li>
+                {/* /Search */}
+                {/* Flag */}
+                <li className="nav-item dropdown has-arrow flag-nav">
+                    <a
+                        className="nav-link dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        href="javascript:void(0);"
+                        role="button"
+                    >
+                        <img src="assets/img/flags/us1.png" alt="" height={20} />
+                    </a>
+                    <div className="dropdown-menu dropdown-menu-right" bis_skin_checked={1}>
+                        <a href="javascript:void(0);" className="dropdown-item">
+                            <img src="assets/img/flags/us.png" alt="" height={16} /> English
+                        </a>
+                        <a href="javascript:void(0);" className="dropdown-item">
+                            <img src="assets/img/flags/fr.png" alt="" height={16} /> French
+                        </a>
+                        <a href="javascript:void(0);" className="dropdown-item">
+                            <img src="assets/img/flags/es.png" alt="" height={16} /> Spanish
+                        </a>
+                        <a href="javascript:void(0);" className="dropdown-item">
+                            <img src="/assets/img/flags/de.png" alt="" height={16} /> German
                         </a>
                     </div>
-                    {/* icon menu for mobile */}
-                    <div
-                        onClick={() => setMobileMenu(prev => !prev)}
-                        className="triger"
-                        bis_skin_checked={1}
-                    ></div>
-                    {/* menu bar for mobile */}
-                    <nav ref={mobileMenuRef} className={`header_menu ${mobileMenu ? "is-visible" : ""}`}>
-                        <ul>
-                            <li>
-                                <a ref={buttonRef} onBlur={() => toggleDcourseDropdown()} onClick={() => toggleDcourseDropdown()} aria-expanded={coursesDropdown} className={`${coursesDropdown ? "uk-open" : ""}`} >
-                                    Courses
-                                </a>
-                                <div
-                                    ref={dropdownRef}
-                                    uk-drop="mode: click"
-                                    className={`category-dropdown uk-drop ${coursesDropdown ? "uk-open uk-drop-bottom-left" : ""}`}
-                                    bis_skin_checked={1}
-                                >
-                                    <ul>
-                                        <li>
-
-                                            <a href="/courses/5" style={{ textDecoration: "none", color: "rgba(0, 0, 0, 0.7)" }} >
-
-                                                <ion-icon
-                                                    name="newspaper-outline"
-                                                    className="is-icon md hydrated"
-                                                    role="img"
-                                                    aria-label="newspaper outline"
-                                                />
-                                                AWS DevOps
-                                            </a>
-                                        </li>
-                                        <li>
-
-                                            <a href="/courses/3" style={{ textDecoration: "none", color: "rgba(0, 0, 0, 0.7)" }} >
-
-                                                <ion-icon
-                                                    name="leaf-outline"
-                                                    className="is-icon md hydrated"
-                                                    role="img"
-                                                    aria-label="leaf outline"
-                                                />
-                                                MERN Stack
-                                            </a>
-                                        </li>
-                                        <li>
-
-                                            <a href="/courses/2" style={{ textDecoration: "none", color: "rgba(0, 0, 0, 0.7)" }} >
-
-                                                <ion-icon
-                                                    name="briefcase-outline"
-                                                    className="is-icon md hydrated"
-                                                    role="img"
-                                                    aria-label="briefcase outline"
-                                                />
-                                                NextJS
-                                            </a>
-                                        </li>
-                                        <li>
-
-                                            <a href="/courses/6" style={{ textDecoration: "none", color: "rgba(0, 0, 0, 0.7)" }} >
-
-                                                <ion-icon
-                                                    name="color-palette-outline"
-                                                    className="is-icon md hydrated"
-                                                    role="img"
-                                                    aria-label="color palette outline"
-                                                />
-                                                Axure DevOps
-                                            </a>
-                                        </li>
-                                        <li>
-
-                                            <a href="/courses/3" style={{ textDecoration: "none", color: "rgba(0, 0, 0, 0.7)" }}>
-
-                                                <ion-icon
-                                                    name="megaphone-outline"
-                                                    className="is-icon md hydrated"
-                                                    role="img"
-                                                    aria-label="megaphone outline"
-                                                />
-                                                MERN Stack
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-
-                                <a href="/blogs" className="active">
-                                    Blogs
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/about-us"> About Us</a>
-                            </li>
-                            <li>
-
-                                <a href="/contact-us"> Contact Us</a>
-                            </li>
-                            {/* <li>
-
-                                <a href="#" aria-expanded="false">
-                                    Pages
-                                </a>
-                                <div
-                                    uk-drop="mode: click"
-                                    className="menu-dropdown uk-drop"
-                                    bis_skin_checked={1}
-                                >
-                                    <ul>
-                                        <li>
-
-                                            <a href="pages-pricing.html"> Pricing</a>
-                                        </li>
-                                        <li>
-
-                                            <a href="pages-faq.html"> Faq </a>
-                                        </li>
-                                        <li>
-
-                                            <a href="pages-help.html"> Help </a>
-                                        </li>
-                                        <li>
-
-                                            <a href="pages-terms.html"> Terms </a>
-                                        </li>
-                                        <li>
-
-                                            <a href="pages-setting.html"> Setting </a>
-                                        </li>
-                                        <li>
-
-                                            <a href="#" aria-expanded="false">
-
-                                                Development
-                                            </a>
-                                            <div
-                                                className="menu-dropdown uk-drop"
-                                                uk-drop="mode: click;pos:right-top;animation: uk-animation-slide-right-small"
-                                                bis_skin_checked={1}
-                                            >
-                                                <ul>
-                                                    <li>
-                                                        <a href="development-elements.html"> Elements</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="development-components.html"> Compounents </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="development-plugins.html"> Plugins </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="development-icons.html"> Icons </a>
-                                                    </li>
-                                                </ul>
+                </li>
+                {/* /Flag */}
+                {/* Notifications */}
+                <li className="nav-item dropdown">
+                    <a
+                        href="javascript:void(0);"
+                        className="dropdown-toggle nav-link"
+                        data-bs-toggle="dropdown"
+                    >
+                        <img src="/assets/img/icons/notification-bing.svg" alt="img" />{" "}
+                        <span className="badge rounded-pill">4</span>
+                    </a>
+                    <div className="dropdown-menu notifications" bis_skin_checked={1}>
+                        <div className="topnav-dropdown-header" bis_skin_checked={1}>
+                            <span className="notification-title">Notifications</span>
+                            <a href="javascript:void(0)" className="clear-noti">
+                                {" "}
+                                Clear All{" "}
+                            </a>
+                        </div>
+                        <div className="noti-content" bis_skin_checked={1}>
+                            <ul className="notification-list">
+                                <li className="notification-message">
+                                    <a href="activities.html">
+                                        <div className="media d-flex" bis_skin_checked={1}>
+                                            <span className="avatar flex-shrink-0">
+                                                <img alt="" src="assets/img/profiles/avatar-02.jpg" />
+                                            </span>
+                                            <div className="media-body flex-grow-1" bis_skin_checked={1}>
+                                                <p className="noti-details">
+                                                    <span className="noti-title">John Doe</span> added new
+                                                    task{" "}
+                                                    <span className="noti-title">
+                                                        Patient appointment booking
+                                                    </span>
+                                                </p>
+                                                <p className="noti-time">
+                                                    <span className="notification-time">4 mins ago</span>
+                                                </p>
                                             </div>
-                                        </li>
-                                        <li>
-
-                                            <a href="course-intro.html" aria-expanded="false">
-
-                                                Course intro 1
-                                            </a>
-                                            <div
-                                                uk-drop="mode: click;pos:right-center"
-                                                className="menu-dropdown uk-drop"
-                                                bis_skin_checked={1}
-                                            >
-                                                <ul>
-                                                    <li>
-
-                                                        <a href="pages-pricing.html"> Pricing</a>
-                                                    </li>
-                                                    <li>
-
-                                                        <a href="pages-faq.html"> Faq </a>
-                                                    </li>
-                                                    <li>
-
-                                                        <a href="pages-help.html"> Help </a>
-                                                    </li>
-                                                    <li>
-
-                                                        <a href="pages-terms.html"> Terms </a>
-                                                    </li>
-                                                    <li>
-
-                                                        <a href="pages-setting.html"> Setting </a>
-                                                    </li>
-                                                    <li>
-
-                                                        <a href="#" aria-expanded="false">
-
-                                                            Development
-                                                        </a>
-                                                        <div
-                                                            className="menu-dropdown uk-drop"
-                                                            uk-drop="mode: click;pos:right-top;animation: uk-animation-slide-right-small"
-                                                            bis_skin_checked={1}
-                                                        >
-                                                            <ul>
-                                                                <li>
-                                                                    <a href="development-elements.html"> Elements</a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="development-components.html">
-
-                                                                        Compounents
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="development-plugins.html"> Plugins </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="development-icons.html"> Icons </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-
-                                                        <a href="course-intro.html"> Course intro 1 </a>
-                                                    </li>
-                                                    <li>
-
-                                                        <a href="course-intro-2.html"> Course intro 2 </a>
-                                                    </li>
-                                                </ul>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li className="notification-message">
+                                    <a href="activities.html">
+                                        <div className="media d-flex" bis_skin_checked={1}>
+                                            <span className="avatar flex-shrink-0">
+                                                <img alt="" src="assets/img/profiles/avatar-03.jpg" />
+                                            </span>
+                                            <div className="media-body flex-grow-1" bis_skin_checked={1}>
+                                                <p className="noti-details">
+                                                    <span className="noti-title">Tarah Shropshire</span>{" "}
+                                                    changed the task name{" "}
+                                                    <span className="noti-title">
+                                                        Appointment booking with payment gateway
+                                                    </span>
+                                                </p>
+                                                <p className="noti-time">
+                                                    <span className="notification-time">6 mins ago</span>
+                                                </p>
                                             </div>
-                                        </li>
-                                        <li>
-
-                                            <a href="course-intro-2.html"> Course intro 2 </a>
-                                        </li>
-                                    </ul>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li className="notification-message">
+                                    <a href="activities.html">
+                                        <div className="media d-flex" bis_skin_checked={1}>
+                                            <span className="avatar flex-shrink-0">
+                                                <img alt="" src="assets/img/profiles/avatar-06.jpg" />
+                                            </span>
+                                            <div className="media-body flex-grow-1" bis_skin_checked={1}>
+                                                <p className="noti-details">
+                                                    <span className="noti-title">Misty Tison</span> added{" "}
+                                                    <span className="noti-title">Domenic Houston</span> and{" "}
+                                                    <span className="noti-title">Claire Mapes</span> to
+                                                    project{" "}
+                                                    <span className="noti-title">
+                                                        Doctor available module
+                                                    </span>
+                                                </p>
+                                                <p className="noti-time">
+                                                    <span className="notification-time">8 mins ago</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li className="notification-message">
+                                    <a href="activities.html">
+                                        <div className="media d-flex" bis_skin_checked={1}>
+                                            <span className="avatar flex-shrink-0">
+                                                <img alt="" src="assets/img/profiles/avatar-17.jpg" />
+                                            </span>
+                                            <div className="media-body flex-grow-1" bis_skin_checked={1}>
+                                                <p className="noti-details">
+                                                    <span className="noti-title">Rolland Webber</span>{" "}
+                                                    completed task{" "}
+                                                    <span className="noti-title">
+                                                        Patient and Doctor video conferencing
+                                                    </span>
+                                                </p>
+                                                <p className="noti-time">
+                                                    <span className="notification-time">12 mins ago</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li className="notification-message">
+                                    <a href="activities.html">
+                                        <div className="media d-flex" bis_skin_checked={1}>
+                                            <span className="avatar flex-shrink-0">
+                                                <img alt="" src="assets/img/profiles/avatar-13.jpg" />
+                                            </span>
+                                            <div className="media-body flex-grow-1" bis_skin_checked={1}>
+                                                <p className="noti-details">
+                                                    <span className="noti-title">Bernardo Galaviz</span> added
+                                                    new task{" "}
+                                                    <span className="noti-title">Private chat module</span>
+                                                </p>
+                                                <p className="noti-time">
+                                                    <span className="notification-time">2 days ago</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="topnav-dropdown-footer" bis_skin_checked={1}>
+                            <a href="activities.html">View all Notifications</a>
+                        </div>
+                    </div>
+                </li>
+                {/* /Notifications */}
+                <li className="nav-item dropdown has-arrow main-drop">
+                    <a
+                        href="javascript:void(0);"
+                        className="dropdown-toggle nav-link userset"
+                        data-bs-toggle="dropdown"
+                    >
+                        <span className="user-img">
+                            <img src="assets/img/profiles/avator1.jpg" alt="" />
+                            <span className="status online" />
+                        </span>
+                    </a>
+                    <div className="dropdown-menu menu-drop-user" bis_skin_checked={1}>
+                        <div className="profilename" bis_skin_checked={1}>
+                            <div className="profileset" bis_skin_checked={1}>
+                                <span className="user-img">
+                                    <img src="assets/img/profiles/avator1.jpg" alt="" />
+                                    <span className="status online" />
+                                </span>
+                                <div className="profilesets" bis_skin_checked={1}>
+                                    <h6>John Doe</h6>
+                                    <h5>Admin</h5>
                                 </div>
-                            </li> */}
-                        </ul>
-                    </nav>
-                    {/* overly for small devices */}
-                    <div
-                        onClick={() => setMobileMenu(prev => !prev)}
-                        className="overly"
-                        bis_skin_checked={1}
-                    />
-                </div>
-                <div style={{ display: "flex", alignItems: "center" }} className="right-side" bis_skin_checked={1}>
-                    <a style={{ textDecoration: "none", background: "linear-gradient(to right, #5e548e, #9f86c0)", color: "white", padding: 8, borderRadius: 6, display: "flex", alignItems: "center", gap: 8 }} className="phone_num" href="tel:+9131958847" >
-                        <div style={{ display: "flex", alignItems: "center", borderRight: "1px solid rgba(0, 0, 0, 0.6)", height: "100%", paddingRight: 4 }} ><ion-icon style={{ fontSize: 22 }} name="call"></ion-icon> </div> <div><h4 style={{ fontSize: "1rem", margin: 0 }} >+91-9131958847</h4></div>
+                            </div>
+                            <hr className="m-0" />
+                            <a className="dropdown-item" href="profile.html">
+                                {" "}
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width={24}
+                                    height={24}
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth={2}
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="feather feather-user me-2"
+                                >
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                    <circle cx={12} cy={7} r={4} />
+                                </svg>{" "}
+                                My Profile
+                            </a>
+                            <a className="dropdown-item" href="generalsettings.html">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width={24}
+                                    height={24}
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth={2}
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="feather feather-settings me-2"
+                                >
+                                    <circle cx={12} cy={12} r={3} />
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                                </svg>
+                                Settings
+                            </a>
+                            <hr className="m-0" />
+                            <a className="dropdown-item logout pb-0" href="signin.html">
+                                <img
+                                    src="assets/img/icons/log-out.svg"
+                                    className="me-2"
+                                    alt="img"
+                                />
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            {/* /Header Menu */}
+            {/* Mobile Menu */}
+            <div className="dropdown mobile-user-menu" bis_skin_checked={1}>
+                <a
+                    href="javascript:void(0);"
+                    className="nav-link dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    <i className="fa fa-ellipsis-v" />
+                </a>
+                <div className="dropdown-menu dropdown-menu-right" bis_skin_checked={1}>
+                    <a className="dropdown-item" href="profile.html">
+                        My Profile
+                    </a>
+                    <a className="dropdown-item" href="generalsettings.html">
+                        Settings
+                    </a>
+                    <a className="dropdown-item" href="signin.html">
+                        Logout
                     </a>
                 </div>
-            </div >
-        </header >
+            </div>
+            {/* /Mobile Menu */}
+        </div>
+
     </>
 }
 

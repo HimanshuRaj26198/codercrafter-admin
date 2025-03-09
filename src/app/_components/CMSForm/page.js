@@ -290,20 +290,20 @@ const CMSForm = () => {
         console.log("Reloading Component...")
         if (typeof window !== "undefined") {
             let data = JSON.parse(localStorage.getItem("current_post_article"));
-            if (data.rawContent) {
+            if (data) {
                 setContentValue(data.rawContent);
                 setEditorContent(data.rawContent);
             }
-            if (data.title) {
+            if (data) {
                 setPostTitle(data.title);
             }
-            if (data.description) {
+            if (data) {
                 setPostDesc(data.description);
             }
-            if (data.headerImg) {
+            if (data) {
                 setHeaderImage(data.headerImg);
             }
-            if (data.category) {
+            if (data) {
                 setCategory(data.category);
             }
         }
@@ -356,12 +356,20 @@ const CMSForm = () => {
     };
 
     const postContent = async () => {
+        document.getElementById("loader-text").innerHTML = "Posting Blog...";
+        document.getElementById("cms-loader").style.display = "flex";
+        let data = JSON.parse(localStorage.getItem("current_post_article"));
+        if (postTitle == "" || postDesc == "" || headerImage == "" || category == "") {
+            toast.error("Please fill all the fields");
+            document.getElementById("cms-loader").style.display = "none";
+            return;
+        }
         try {
             const colRef = collection(db, "posts");
             let data = JSON.parse(localStorage.getItem("current_post_article"));
             const slug = createSlug(postTitle);
-            const newDoc = await addDoc(colRef, { ...data, createdAt: Timestamp.now(), slug: slug, random: Math.random() });
-            console.log(newDoc, "Blog posted");
+            // const newDoc = await addDoc(colRef, { ...data, createdAt: Timestamp.now(), slug: slug, random: Math.random() });
+            // console.log(newDoc, "Blog posted");
             toast.success("Blog posted successfully!");
             localStorage.removeItem("current_post_article");
             setContentValue("");
@@ -369,9 +377,32 @@ const CMSForm = () => {
             setPostDesc("");
             setHeaderImage("");
             setCategory("");
+            document.getElementById("loader-text").innerHTML = "Requesting for indexing on google...";
+            let requestBody = { url: slug !== "" ? `https://codercrafter.in/blogs/${data.category_ref}/${slug}` : "", type: "URL_UPDATED" };
+            console.log(requestBody, "Request Body");
+            let indexRes = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/indexing`, JSON.stringify({ url: slug !== "" ? `https://codercrafter.in/blogs/${data.category_ref}/${slug}` : "", type: "URL_UPDATED" }), { headers: { 'Content-Type': 'application/json' } });
+            if (indexRes.status == 400) {
+                toast.error(indexRes.response.data.message);
+                document.getElementById("cms-loader").style.display = "none";
+                return;
+            }
+            if (indexRes.status !== 200) {
+                document.getElementById("cms-loader").style.display = "none";
+                toast.error("Indexing not requested");
+                return
+            }
+            console.log(indexRes, "Indexing Requested");
+            toast.success("Indexing Requested successfully!");
+            document.getElementById("cms-loader").style.display = "none";
         } catch (err) {
             console.log(err);
-            toast.error("Error in posting blog!");
+            if (err.status == 400) {
+                toast.error(err.response.data.message);
+                document.getElementById("cms-loader").style.display = "none";
+                return;
+            }
+            toast.error("Internal Server Error");
+            document.getElementById("cms-loader").style.display = "none";
         }
     };
 
@@ -428,7 +459,7 @@ const CMSForm = () => {
     return (
         <>
             {toggleMetaData && <MetaData addMetaData={getMetaData} closeMetaData={setToggleMetaData} />}
-            <div className='flex flex-column gap-4' >
+            <div className='flex flex-col gap-4' >
                 <div className='action_container' >
                     <button style={{ border: "2.5px solid blue" }} className='post_btn' onClick={postContent}>Publish</button>
                     <a style={{ border: "2.5px solid yellow", textDecoration: "none", color: "black" }} className='post_btn' href='/preview' >Preview</a>
