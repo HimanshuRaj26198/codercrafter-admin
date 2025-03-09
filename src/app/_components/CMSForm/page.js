@@ -18,7 +18,7 @@ import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight';
 import 'highlight.js/styles/github-dark.css'; // Alternative dark theme // Dark theme (Change if needed)
 import CustomHeading from '../CustomHeading1/CustomHeading1';
 import MetaData from '../MetaData/page';
-import { addDoc, collection, Timestamp } from 'firebase/firestore';
+import { addDoc, collection, Timestamp, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { toast } from 'react-toastify';
 import Link from '@tiptap/extension-link';
@@ -358,53 +358,80 @@ const CMSForm = () => {
     const postContent = async () => {
         document.getElementById("loader-text").innerHTML = "Posting Blog...";
         document.getElementById("cms-loader").style.display = "flex";
+
         let data = JSON.parse(localStorage.getItem("current_post_article"));
-        if (postTitle == "" || postDesc == "" || headerImage == "" || category == "") {
+
+        if (postTitle === "" || postDesc === "" || headerImage === "" || category === "") {
             toast.error("Please fill all the fields");
             document.getElementById("cms-loader").style.display = "none";
             return;
         }
+
         try {
             const colRef = collection(db, "posts");
-            let data = JSON.parse(localStorage.getItem("current_post_article"));
             const slug = createSlug(postTitle);
-            const newDoc = await addDoc(colRef, { ...data, createdAt: Timestamp.now(), slug: slug, random: Math.random() });
+
+            // ✅ Save post in Firestore
+            const newDoc = await addDoc(colRef, {
+                ...data,
+                createdAt: Timestamp.now(),
+                slug: slug,
+                random: Math.random(),
+            });
+
             console.log(newDoc, "Blog posted");
             toast.success("Blog posted successfully!");
+
             localStorage.removeItem("current_post_article");
             setContentValue("");
             setPostTitle("");
             setPostDesc("");
             setHeaderImage("");
             setCategory("");
-            document.getElementById("loader-text").innerHTML = "Requesting for indexing on google...";
-            let requestBody = { url: slug !== "" ? `https://codercrafter.in/blogs/${data.category_ref}/${slug}` : "", type: "URL_UPDATED" };
+
+            document.getElementById("loader-text").innerHTML = "Requesting indexing on Google...";
+
+            let requestBody = {
+                url: slug ? `https://codercrafter.in/blogs/${data.category_ref}/${slug}` : "",
+                type: "URL_UPDATED",
+            };
+
             console.log(requestBody, "Request Body");
-            let indexRes = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/indexing`, JSON.stringify({ url: slug !== "" ? `https://codercrafter.in/blogs/${data.category_ref}/${slug}` : "", type: "URL_UPDATED" }), { headers: { 'Content-Type': 'application/json' } });
-            if (indexRes.status == 400) {
-                toast.error(indexRes.response.data.message);
+
+            // ✅ Send request to Indexing API
+            let indexRes = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/indexing`,
+                requestBody, // ✅ No need to `JSON.stringify`
+                { headers: { "Content-Type": "application/json" } }
+            );
+
+            if (indexRes.status >= 400) {
+                toast.error(indexRes.data.message || "Indexing request failed");
                 document.getElementById("cms-loader").style.display = "none";
                 return;
             }
-            if (indexRes.status !== 200) {
-                document.getElementById("cms-loader").style.display = "none";
-                toast.error("Indexing not requested");
-                return
-            }
+
             console.log(indexRes, "Indexing Requested");
+
+            // ✅ Update Firestore doc with `indexed: true`
+            const postRef = doc(db, "posts", newDoc.id);
+            await updateDoc(postRef, { indexed: true });
+
             toast.success("Indexing Requested successfully!");
             document.getElementById("cms-loader").style.display = "none";
         } catch (err) {
             console.log(err);
-            if (err.status == 400) {
+
+            if (err.response && err.response.status === 400) {
                 toast.error(err.response.data.message);
-                document.getElementById("cms-loader").style.display = "none";
-                return;
+            } else {
+                toast.error("Internal Server Error");
             }
-            toast.error("Internal Server Error");
+
             document.getElementById("cms-loader").style.display = "none";
         }
     };
+
 
     const clearContent = () => {
         localStorage.removeItem("current_post_article");

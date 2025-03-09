@@ -22,14 +22,14 @@ export async function POST(req, res) {
         const client = await auth.getClient();
 
         const apiUrl = "https://indexing.googleapis.com/v3/urlNotifications:publish";
-        // const response = await client.request({
-        //     url: apiUrl,
-        //     method: "POST",
-        //     data: {
-        //         url,
-        //         type: type || "URL_UPDATED",
-        //     },
-        // });
+        const response = await client.request({
+            url: apiUrl,
+            method: "POST",
+            data: {
+                url,
+                type: type || "URL_UPDATED",
+            },
+        });
         return new Response(JSON.stringify({ message: "URL Submitted Successfully", data: response.data }), { status: 200 });
     } catch (error) {
         return new Response(JSON.stringify({ message: error.message }), { status: 500 });

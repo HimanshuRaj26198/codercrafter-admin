@@ -1,5 +1,8 @@
 "use client"
+import { db } from "@/lib/firebase/config";
+import { doc, updateDoc } from "firebase/firestore";
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import { Tooltip } from "react-tooltip"
 const BlogsPage = () => {
     const [blogs, setBlogs] = useState([]);
@@ -41,6 +44,30 @@ const BlogsPage = () => {
             year: "numeric",
         });
     }
+
+    const requestIndexing = async (slug, blogId) => {
+        let docRef = doc(db, "posts", blogId);
+        try {
+            const response = await fetch("/api/indexing", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ url: `https://codercrafter.in/blogs/${slug}`, type: "URL_UPDATED" }),
+            });
+            const data = await response.json();
+            await updateDoc(docRef, { indexing: true });
+            toast.success("Indexing Requested")
+            console.log(data);
+        } catch (error) {
+            await updateDoc(docRef, { indexing: false });
+            toast.error("Error requesting indexing")
+            console.error("Error requesting indexing:", error);
+        }
+    }
+
+
+
 
     return <>
         <div className="content" bis_skin_checked={1}>
@@ -390,7 +417,7 @@ const BlogsPage = () => {
                                             aria-label="Grand Total: activate to sort column ascending"
                                             style={{ width: "94.0125px" }}
                                         >
-                                            Indexing Rquest
+                                            Indexing
                                         </th>
 
 
@@ -423,7 +450,7 @@ const BlogsPage = () => {
                                                 <td>{blog.category}</td>
                                                 <td>{formatFirebaseTimestamp(blog.createdAt)}</td>
                                                 <td>{getTimeFromFirebaseTimestamp(blog.createdAt)}</td>
-                                                <td>{blog.indexingRequested == true ? "Requested" : blog.indexingRequested == false ? "Not Requested" : "Unknown"}</td>
+                                                <td>{blog.indexing == true ? "Requested" : blog.indexing == false ? "Failed" : "Pending"} <i onClick={() => requestIndexing(blog.slug, blog.id)} style={{ cursor: "pointer" }} className="fa-brands fa-google"></i></td>
                                                 <td>
                                                     <a className="me-3" href="editpurchase.html">
                                                         <img src="assets/img/icons/edit.svg" alt="img" />

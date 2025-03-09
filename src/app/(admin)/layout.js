@@ -32,6 +32,7 @@ export default function RootLayout({ children }) {
         <link rel="stylesheet" href="/assets/css/dataTables.bootstrap4.min.css" />
         <link rel="stylesheet" href="/assets/css/fontawesome.min.css" />
         <link rel="stylesheet" href="/assets/css/all.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossOrigin="anonymous" referrerPolicy="no-referrer" />
         {/* <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" /> */}
         <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
         <script src="/assets/js/jquery-3.6.0.min.js" />
