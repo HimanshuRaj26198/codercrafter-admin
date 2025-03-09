@@ -18,7 +18,7 @@ import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight';
 import 'highlight.js/styles/github-dark.css'; // Alternative dark theme // Dark theme (Change if needed)
 import CustomHeading from '../CustomHeading1/CustomHeading1';
 import MetaData from '../MetaData/page';
-import { addDoc, collection, Timestamp, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, Timestamp, updateDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { toast } from 'react-toastify';
 import Link from '@tiptap/extension-link';
