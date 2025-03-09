@@ -1,18 +1,62 @@
 "use client"
+
+import ActionPopup from "@/app/_components/ActionPopup/page";
 import { db } from "@/lib/firebase/config";
-import { doc, updateDoc } from "firebase/firestore";
-import { useState, useEffect } from "react";
+import { collection, doc, getDocs, orderBy, query, updateDoc, limit, startAfter, deleteDoc } from "firebase/firestore";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { Tooltip } from "react-tooltip"
 const BlogsPage = () => {
     const [blogs, setBlogs] = useState([]);
+    const [pageSize, setPageSize] = useState(10); // Number of posts per page
+    const [currentPage, setCurrentPage] = useState(1); // Current page number
+    const [totalPages, setTotalPages] = useState(1); // Total number of pages
+    const [totalSize, setTotalSize] = useState(0); // Total number of posts
+    const [deleteConfirm, setDeleteConfirm] = useState(null);
+
+    const fetchBlogs = async () => {
+        try {
+            let colQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(pageSize));
+
+            // If fetching a specific page (page > 1), find the startAfter document
+            if (currentPage > 1) {
+                let offset = (currentPage - 1) * pageSize;
+                const offsetQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(offset));
+                const offsetDocs = await getDocs(offsetQuery);
+
+                if (offsetDocs.docs.length === offset) {
+                    const lastVisibleDoc = offsetDocs.docs[offset - 1];
+                    colQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"), startAfter(lastVisibleDoc), limit(pageSize));
+                }
+            }
+
+            const colRef = await getDocs(colQuery);
+            const blogsData = colRef.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+
+            setBlogs(blogsData);
+
+            const blogsPageQuery = await getDocs(collection(db, "posts"));
+            setTotalSize(blogsPageQuery.size);
+            setTotalPages(Math.ceil(blogsPageQuery.size / pageSize));
+
+
+        } catch (error) {
+            console.error("Error fetching posts:", error);
+            return [];
+        }
+    };
+
 
     useEffect(() => {
-        fetch("/api/posts")
-            .then(res => res.json())
-            .then(data => setBlogs(data))
-            .catch(err => console.error(err));
-    }, []);
+        fetchBlogs();
+    }, [currentPage]);
+
+    useEffect(() => {
+        fetchBlogs();
+    }, [pageSize])
 
     function getTimeFromFirebaseTimestamp(timestamp) {
         if (!timestamp || !timestamp.seconds) return "Invalid time";
@@ -57,7 +101,8 @@ const BlogsPage = () => {
             });
             const data = await response.json();
             await updateDoc(docRef, { indexing: true });
-            toast.success("Indexing Requested")
+            toast.success("Indexing Requested");
+            fetchBlogs();
             console.log(data);
         } catch (error) {
             await updateDoc(docRef, { indexing: false });
@@ -66,7 +111,21 @@ const BlogsPage = () => {
         }
     }
 
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text);
+        toast.success("Copied to clipboard")
+    }
 
+    const deleteBlog = async (id) => {
+        try {
+            const docRef = doc(db, "posts", id);
+            await deleteDoc(docRef);
+            toast.success("Blog deleted successfully");
+            fetchBlogs();
+        } catch (err) {
+            toast.error("Error deleting blog");
+        }
+    }
 
 
     return <>
@@ -439,27 +498,50 @@ const BlogsPage = () => {
                                     {blogs.map((blog, i) => {
                                         const truncatedTitle = blog.title?.length > 50 ? blog.title.slice(0, 50) + '...' : blog.title;
                                         return (
-                                            <tr className={`${i % 2 === 0 ? "odd" : "even"}`} key={i} data-tooltip-id="blog-tooltip" data-tooltip-content={blog.title} >
-                                                <td className="sorting_1">
-                                                    <label className="checkboxs">
-                                                        <input type="checkbox" />
-                                                        <span className="checkmarks" />
-                                                    </label>
-                                                </td>
-                                                <td className="text-bolds"  >{truncatedTitle}</td>
-                                                <td>{blog.category}</td>
-                                                <td>{formatFirebaseTimestamp(blog.createdAt)}</td>
-                                                <td>{getTimeFromFirebaseTimestamp(blog.createdAt)}</td>
-                                                <td>{blog.indexing == true ? "Requested" : blog.indexing == false ? "Failed" : "Pending"} <i onClick={() => requestIndexing(blog.slug, blog.id)} style={{ cursor: "pointer" }} className="fa-brands fa-google"></i></td>
-                                                <td>
-                                                    <a className="me-3" href="editpurchase.html">
-                                                        <img src="assets/img/icons/edit.svg" alt="img" />
-                                                    </a>
-                                                    <a className="me-3 confirm-text" href="javascript:void(0);">
-                                                        <img src="assets/img/icons/delete.svg" alt="img" />
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                            <React.Fragment id={blog.id} key={blog.id}>
+                                                <tr className={`${i % 2 === 0 ? "odd" : "even"}`} key={i} data-tooltip-id="blog-tooltip" data-tooltip-content={blog.title} >
+                                                    <td className="sorting_1">
+                                                        <label className="checkboxs">
+                                                            <input type="checkbox" />
+                                                            <span className="checkmarks" />
+                                                        </label>
+                                                    </td>
+                                                    <td className="text-bolds"  ><i className="fa-solid fa-copy link-copy-icon" onClick={() => copyToClipboard(`https://codercrafter.in/blogs/${blog.category_ref}/${blog.slug}`)} /> {truncatedTitle}  <a href={`https://codercrafter.in/blogs/${blog.category_ref}/${blog.slug}`} target="_blank" rel="noopener noreferrer" ><i className="fa-solid fa-up-right-from-square"></i></a></td>
+                                                    <td>{blog.category}</td>
+                                                    <td>{formatFirebaseTimestamp(blog.createdAt)}</td>
+                                                    <td>{getTimeFromFirebaseTimestamp(blog.createdAt)}</td>
+                                                    <td>{blog.indexing == true ? "Requested" : blog.indexing == false ? "Failed" : "Pending"} <i onClick={() => requestIndexing(blog.slug, blog.id)} style={{ cursor: "pointer" }} className="fa-brands fa-google"></i></td>
+                                                    <td>
+                                                        <a className="me-3" href="editpurchase.html">
+                                                            <img src="assets/img/icons/edit.svg" alt="img" />
+                                                        </a>
+                                                        <a className="me-3 confirm-text" onClick={() => setDeleteConfirm(blog.id)}>
+                                                            <img src="assets/img/icons/delete.svg" alt="img" />
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                {/* Delete Confirmation Row */}
+                                                {deleteConfirm === blog.id && (
+                                                    <tr>
+                                                        <td colSpan="7">
+                                                            <div className="flex items-center justify-center p-3 bg-red-100 border border-red-400 rounded text-center">
+                                                                <p className="text-red-700">Are you sure you want to delete this blog?</p>
+                                                                <div style={{ display: "flex", gap: 5, justifyContent: "center" }} >
+                                                                    <button className="btn btn-block btn-outline-danger active" onClick={() => {
+                                                                        deleteBlog(blog.id); // Call delete function
+                                                                        setDeleteConfirm(null);
+                                                                    }}>
+                                                                        Confirm
+                                                                    </button>
+                                                                    <button className="btn btn-block btn-outline-secondary active" onClick={() => setDeleteConfirm(null)}>
+                                                                        Cancel
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            </React.Fragment>
                                         );
                                     })}
                                 </tbody>
@@ -475,6 +557,7 @@ const BlogsPage = () => {
                                         name="DataTables_Table_0_length"
                                         aria-controls="DataTables_Table_0"
                                         className="custom-select custom-select-sm form-control form-control-sm"
+                                        onChange={(e) => setPageSize(e.target.value)}
                                     >
                                         <option value={10}>10</option>
                                         <option value={25}>25</option>
@@ -489,29 +572,56 @@ const BlogsPage = () => {
                                 bis_skin_checked={1}
                             >
                                 <ul className="pagination">
-                                    <li className="paginate_button page-item active">
-                                        <a
-                                            href="#"
-                                            aria-controls="DataTables_Table_0"
-                                            data-dt-idx={0}
-                                            tabIndex={0}
-                                            className="page-link"
-                                        >
-                                            1
-                                        </a>
+                                    {/* Previous Button */}
+                                    <li
+                                        className={`paginate_button page-item ${currentPage === 1 ? "disabled" : ""}`}
+                                        onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
+                                    >
+                                        <a className="page-link">Prev</a>
                                     </li>
-                                    <li className="paginate_button page-item ">
-                                        <a
-                                            href="#"
-                                            aria-controls="DataTables_Table_0"
-                                            data-dt-idx={1}
-                                            tabIndex={0}
-                                            className="page-link"
-                                        >
-                                            2
-                                        </a>
+
+                                    {/* First Page */}
+                                    <li className={`paginate_button page-item ${currentPage === 1 ? "active" : ""}`}>
+                                        <a className="page-link" onClick={() => setCurrentPage(1)}>1</a>
+                                    </li>
+
+                                    {/* Left Ellipsis */}
+                                    {currentPage > 4 && <li className="paginate_button page-item disabled"><a className="page-link">...</a></li>}
+
+                                    {/* Dynamic Page Numbers (Excluding 1) */}
+                                    {Array.from({ length: totalPages }, (_, i) => i + 1)
+                                        .filter(page => page !== 1 && page !== totalPages && (page >= currentPage - 2 && page <= currentPage + 2))
+                                        .map(page => (
+                                            <li
+                                                key={page}
+                                                className={`paginate_button page-item ${currentPage === page ? "active" : ""}`}
+
+                                            >
+                                                <a className="page-link" onClick={() => setCurrentPage(page)}>{page}</a>
+                                            </li>
+                                        ))
+                                    }
+
+                                    {/* Right Ellipsis */}
+                                    {currentPage < totalPages - 3 && <li className="paginate_button page-item disabled"><a className="page-link">...</a></li>}
+
+                                    {/* Last Page (If more than 1 page exists) */}
+                                    {totalPages > 1 && (
+                                        <li className={`paginate_button page-item ${currentPage === totalPages ? "active" : ""}`}>
+                                            <a className="page-link" onClick={() => setCurrentPage(totalPages)}>{totalPages}</a>
+                                        </li>
+                                    )}
+
+                                    {/* Next Button */}
+                                    <li
+                                        className={`paginate_button page-item ${currentPage === totalPages ? "disabled" : ""}`}
+                                        onClick={() => currentPage < totalPages && setCurrentPage(currentPage + 1)}
+                                    >
+                                        <a className="page-link">Next</a>
                                     </li>
                                 </ul>
+
+
                             </div>
                             <div
                                 className="dataTables_info"
@@ -520,7 +630,7 @@ const BlogsPage = () => {
                                 aria-live="polite"
                                 bis_skin_checked={1}
                             >
-                                1 - 10 of 14 items
+                                {currentPage} - {totalPages} of {totalSize} items
                             </div>
                         </div>
                     </div>

@@ -525,3 +525,12 @@
         @include position($__absolute, 4px, null, null, 82px);
     }
 }
+
+
+.link-copy-icon {
+    cursor: pointer;
+}
+
+.link-copy-icon:hover {
+    color: rgb(255, 159, 67);
+}

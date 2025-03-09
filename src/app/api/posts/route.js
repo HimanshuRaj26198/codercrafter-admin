@@ -1,11 +1,12 @@
 import { db } from "@/lib/firebase/config";
-import { collection, getDocs, orderBy } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 
 
 
 export async function GET() {
     try {
-        const colRef = await getDocs(collection(db, "posts"), orderBy("createdAt", "desc"));
+        let colQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+        const colRef = await getDocs(colQuery);
         const blogs = colRef.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
