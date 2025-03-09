@@ -368,8 +368,8 @@ const CMSForm = () => {
             const colRef = collection(db, "posts");
             let data = JSON.parse(localStorage.getItem("current_post_article"));
             const slug = createSlug(postTitle);
-            // const newDoc = await addDoc(colRef, { ...data, createdAt: Timestamp.now(), slug: slug, random: Math.random() });
-            // console.log(newDoc, "Blog posted");
+            const newDoc = await addDoc(colRef, { ...data, createdAt: Timestamp.now(), slug: slug, random: Math.random() });
+            console.log(newDoc, "Blog posted");
             toast.success("Blog posted successfully!");
             localStorage.removeItem("current_post_article");
             setContentValue("");
