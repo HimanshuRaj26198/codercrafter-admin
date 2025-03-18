@@ -377,6 +377,7 @@ const CMSForm = () => {
                 createdAt: Timestamp.now(),
                 slug: slug,
                 random: Math.random(),
+                title_lowercase: postTitle.toLowerCase()
             });
 
             console.log(newDoc, "Blog posted");
