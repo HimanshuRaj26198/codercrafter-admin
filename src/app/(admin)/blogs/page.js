@@ -89,7 +89,7 @@ const BlogsPage = () => {
         });
     }
 
-    const requestIndexing = async (slug, blogId) => {
+    const requestIndexing = async (category, slug, blogId) => {
         let docRef = doc(db, "posts", blogId);
         try {
             const response = await fetch("/api/indexing", {
@@ -97,7 +97,7 @@ const BlogsPage = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ url: `https://codercrafter.in/blogs/${slug}`, type: "URL_UPDATED" }),
+                body: JSON.stringify({ url: `https://codercrafter.in/${category}/${slug}`, type: "URL_UPDATED" }),
             });
             const data = await response.json();
             await updateDoc(docRef, { indexing: true });
@@ -510,7 +510,7 @@ const BlogsPage = () => {
                                                     <td>{blog.category}</td>
                                                     <td>{formatFirebaseTimestamp(blog.createdAt)}</td>
                                                     <td>{getTimeFromFirebaseTimestamp(blog.createdAt)}</td>
-                                                    <td>{blog.indexing == true ? "Requested" : blog.indexing == false ? "Failed" : "Pending"} <i onClick={() => requestIndexing(blog.slug, blog.id)} style={{ cursor: "pointer" }} className="fa-brands fa-google"></i></td>
+                                                    <td>{blog.indexing == true ? "Requested" : blog.indexing == false ? "Failed" : "Pending"} <i onClick={() => requestIndexing(blog.category_ref, blog.slug, blog.id)} style={{ cursor: "pointer" }} className="fa-brands fa-google"></i></td>
                                                     <td>
                                                         <a className="me-3" href="editpurchase.html">
                                                             <img src="assets/img/icons/edit.svg" alt="img" />
